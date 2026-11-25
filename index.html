@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ASO Keyword Gap Audit — PeekPanda API sample</title>
+<style>
+  :root { color-scheme: light dark; --bg: #ffffff; --fg: #14171a; --muted: #5b6570; --line: #d9dfe5; --card: #f6f8fa; --accent: #0f62fe; --good: #117a37; --warn: #9a5b00; --bad: #b42318; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0f1318; --fg: #e8edf2; --muted: #9aa5b1; --line: #27313d; --card: #161c24; --accent: #6aa4ff; --good: #4ade80; --warn: #fbbf24; --bad: #f87171; }
+  }
+  * { box-sizing: border-box; }
+  body { font: 15px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; max-width: 980px; margin: 2rem auto; padding: 0 1.25rem 3rem; background: var(--bg); color: var(--fg); }
+  h1 { font-size: 1.75rem; margin: 0 0 0.5rem; letter-spacing: -0.02em; }
+  h2 { font-size: 1.15rem; margin: 2rem 0 0.65rem; border-bottom: 1px solid var(--line); padding-bottom: 0.35rem; }
+  p { margin: 0.5rem 0 0.85rem; }
+  a { color: var(--accent); }
+  code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.86rem; }
+  pre { background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 0.8rem 1rem; overflow-x: auto; }
+  .muted { color: var(--muted); font-size: 0.92rem; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+  @media (max-width: 720px) { .grid { grid-template-columns: 1fr; } }
+  label { display: block; font-weight: 600; font-size: 0.88rem; margin-bottom: 0.35rem; }
+  textarea { width: 100%; height: 150px; font: 12.5px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace; padding: 0.6rem; border: 1px solid var(--line); border-radius: 6px; background: var(--card); color: var(--fg); }
+  .controls, .filters { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; margin: 0.75rem 0; }
+  .filters { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 0.65rem 0.85rem; }
+  .filters label { display: inline-flex; align-items: center; gap: 0.4rem; margin: 0; font-weight: 500; font-size: 0.85rem; }
+  select, input[type="text"] { font: inherit; font-size: 0.86rem; padding: 0.3rem 0.5rem; border: 1px solid var(--line); border-radius: 5px; background: var(--bg); color: var(--fg); }
+  button { font: inherit; font-size: 0.9rem; font-weight: 600; padding: 0.48rem 0.9rem; border-radius: 6px; border: 1px solid var(--line); background: var(--card); color: var(--fg); cursor: pointer; }
+  button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  button:disabled { opacity: 0.45; cursor: not-allowed; }
+  .err { color: var(--bad); font-weight: 600; margin: 0.6rem 0; min-height: 1.2rem; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.75rem; margin: 1rem 0; }
+  .stat { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 0.75rem 0.9rem; }
+  .stat .num { font-size: 1.45rem; font-weight: 700; line-height: 1.2; }
+  .stat .lbl { font-size: 0.8rem; color: var(--muted); }
+  table { width: 100%; border-collapse: collapse; margin: 0.5rem 0 1.25rem; font-size: 0.9rem; }
+  th, td { text-align: left; border-bottom: 1px solid var(--line); padding: 0.45rem 0.55rem; vertical-align: top; }
+  th { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.03em; color: var(--muted); }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .pill { display: inline-block; padding: 0.12rem 0.45rem; border-radius: 999px; font-size: 0.76rem; font-weight: 600; border: 1px solid var(--line); }
+  .pill.striking { color: var(--warn); border-color: var(--warn); }
+  .pill.leading { color: var(--good); border-color: var(--good); }
+  .pill.trailing { color: var(--bad); border-color: var(--bad); }
+  footer { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--line); font-size: 0.86rem; color: var(--muted); }
+</style>
+</head>
+<body>
+<h1>ASO Keyword Gap Audit</h1>
+<p>
+  <a href="https://peekpanda.com">PeekPanda</a> compares stored US English App Store search observations between your tracked iOS app and a rival — splitting them into queries only the rival ranks for, queries you both rank for, and queries only your app ranks for. Paste one or more gap responses below to combine multiple rivals, surface consensus gaps and striking-distance head-to-heads, and diff against an earlier run. Everything runs locally in your browser; nothing is sent anywhere.
+</p>
+<p class="muted">
+  Positions are observed US App Store search positions from stored snapshots, not native App Store ranks or search volume. An empty side means those searches were not in the collected set for that app, not zero.
+</p>
+
+<div class="grid">
+  <div>
+    <label for="raw">Keyword gap JSON (one response, an array, or a CLI <code>--save</code> file)</label>
+    <textarea id="raw" spellcheck="false" placeholder="Paste GET /v1/aso/apps/{appId}/gap/{rivalStoreId} JSON here..."></textarea>
+  </div>
+  <div>
+    <label for="prev">Earlier run JSON (optional, for diffing)</label>
+    <textarea id="prev" spellcheck="false" placeholder="Paste an earlier gap JSON or --save file to see closed gaps and rank swings..."></textarea>
+  </div>
+</div>
+
+<div class="filters">
+  <label>Max rank
+    <select id="maxRank">
+      <option value="">All</option>
+      <option value="10">Top 10</option>
+      <option value="25" selected>Top 25</option>
+      <option value="50">Top 50</option>
+    </select>
+  </label>
+  <label>Min rivals (missed)
+    <select id="minRivals">
+      <option value="1" selected>1+</option>
+      <option value="2">2+ (consensus)</option>
+      <option value="3">3+</option>
+    </select>
+  </label>
+  <label><input type="checkbox" id="asciiOnly"> ASCII only</label>
+  <label>Filter <input type="text" id="search" placeholder="e.g. meal"></label>
+</div>
+
+<div class="controls">
+  <button id="go" class="primary">Build audit</button>
+  <button id="ex">Load example data</button>
+  <button id="csv" disabled>Download CSV</button>
+  <button id="md" disabled>Copy Markdown</button>
+</div>
+
+<div id="err" class="err" role="alert"></div>
+<div id="out"></div>
+
+<h2>Where to get the JSON</h2>
+<p>
+  Reading keyword gaps needs a PeekPanda account (scope <code>context:read</code>) and counts toward your plan's daily API and MCP allowance; the GET endpoint returns stored observations and never calls Apple. See <a href="https://peekpanda.com/docs/keyword-gap">Keyword gap</a>, <a href="https://peekpanda.com/docs/get-aso-keyword-gap">Get ASO keyword gap</a>, <a href="https://peekpanda.com/docs/list-aso-apps">List ASO apps</a>, and <a href="https://peekpanda.com/docs/plans-and-refreshes">plans and refreshes</a>:
+</p>
+<pre>curl --get 'https://api.peekpanda.com/v1/aso/apps/YOUR_APP_UUID/gap/RIVAL_STORE_ID' \
+  --header "Authorization: Bearer $PEEKPANDA_TOKEN" \
+  --header 'x-genviral-tenancy: personal' > gap.json</pre>
+
+<footer>
+  Part of a small set of open-source PeekPanda API tools. Source and Node CLI: <a href="https://github.com/fdarkaou/aso-keyword-gap-audit">github.com/fdarkaou/aso-keyword-gap-audit</a> (MIT). Example data uses synthetic store IDs and made-up apps.
+</footer>
+
+<script type="module">
+import { buildReport, diffReports, extractPayloads, toCsv, toMarkdown } from './gap.js';
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+let lastReport = null;
+let lastChanges = null;
+
+function currentFilterOpts() {
+  const mr = $('maxRank').value;
+  return {
+    maxRank: mr ? Number(mr) : null,
+    minRivals: Number($('minRivals').value) || 1,
+    asciiOnly: $('asciiOnly').checked,
+    search: $('search').value.trim() || null,
+  };
+}
+
+function render(report, changes) {
+  const title = report.subject.name
+    ? `${report.subject.name} (${report.subject.storeId})`
+    : report.subject.storeId || 'Subject app';
+
+  let html = `<h2>${esc(title)}</h2>`;
+  html += `<div class="stats">
+    <div class="stat"><div class="num">${report.summary.rivalCount}</div><div class="lbl">Rivals compared</div></div>
+    <div class="stat"><div class="num">${report.summary.missedCount}</div><div class="lbl">Missed queries (${report.summary.consensusMissedCount} consensus)</div></div>
+    <div class="stat"><div class="num">${report.summary.strikingDistanceCount}</div><div class="lbl">Striking-distance shared</div></div>
+    <div class="stat"><div class="num">${report.summary.moatCount}</div><div class="lbl">Your moat (only you)</div></div>
+  </div>`;
+
+  if (changes) {
+    const items = changes.lines.length
+      ? changes.lines.map((l) => `<li>${esc(l)}</li>`).join('')
+      : '<li>Nothing changed in the filtered stored observations.</li>';
+    html += `<h2>Changes since earlier run</h2><ul>${items}</ul>`;
+  }
+
+  html += '<h2>Rivals compared</h2><table><thead><tr><th>Rival</th><th class="num">Store ID</th><th class="num">Only rival</th><th class="num">Top-10 gaps</th><th class="num">Shared (W/L/T)</th><th class="num">Only you</th></tr></thead><tbody>';
+  html += report.rivals
+    .map(
+      (r) =>
+        `<tr><td>${esc(r.name)}</td><td class="num">${esc(r.storeId)}</td><td class="num">${r.onlyRivalCount}</td><td class="num">${r.top10Missed}</td><td class="num">${r.sharedCount} (${r.sharedWins}/${r.sharedLosses}/${r.sharedTies})</td><td class="num">${r.onlySubjectCount}</td></tr>`,
+    )
+    .join('');
+  html += '</tbody></table>';
+
+  html += '<h2>Missed keywords (only rivals)</h2>';
+  if (!report.missed.length) {
+    html += '<p class="muted">Nothing they rank for that this app misses under the current filters.</p>';
+  } else {
+    html += '<table><thead><tr><th>Query</th><th class="num">Rivals</th><th class="num">Best rival</th><th class="num">Avg rival</th><th>Observed on</th></tr></thead><tbody>';
+    html += report.missed
+      .slice(0, 100)
+      .map(
+        (r) =>
+          `<tr><td><code>${esc(r.query)}</code></td><td class="num">${r.rivalCount}</td><td class="num">#${r.bestRivalPosition}</td><td class="num">#${r.avgRivalPosition}</td><td>${esc(r.rivals.map((x) => `${x.name} (#${x.position})`).join(', '))}</td></tr>`,
+      )
+      .join('');
+    html += '</tbody></table>';
+  }
+
+  html += '<h2>Head-to-head (shared keywords)</h2>';
+  if (!report.shared.length) {
+    html += '<p class="muted">No shared keywords under the current filters.</p>';
+  } else {
+    html += '<table><thead><tr><th>Query</th><th class="num">You</th><th class="num">Best rival</th><th class="num">Gap</th><th>Status</th><th>Rivals</th></tr></thead><tbody>';
+    html += report.shared
+      .slice(0, 100)
+      .map((r) => {
+        const gapText = r.delta > 0 ? `-${r.delta}` : r.delta < 0 ? `+${Math.abs(r.delta)}` : '0';
+        const cls = r.strikingDistance ? 'striking' : r.status;
+        const label = r.strikingDistance ? 'striking distance' : r.status;
+        return `<tr><td><code>${esc(r.query)}</code></td><td class="num">#${r.subjectPosition}</td><td class="num">#${r.bestRivalPosition}</td><td class="num">${esc(gapText)}</td><td><span class="pill ${cls}">${esc(label)}</span></td><td>${esc(r.rivals.map((x) => `${x.name} (#${x.position})`).join(', '))}</td></tr>`;
+      })
+      .join('');
+    html += '</tbody></table>';
+  }
+
+  html += '<h2>Your moat (only this app)</h2>';
+  if (!report.moat.length) {
+    html += '<p class="muted">Nothing this app ranks for alone under the current filters.</p>';
+  } else {
+    html += '<table><thead><tr><th>Query</th><th class="num">Your position</th></tr></thead><tbody>';
+    html += report.moat
+      .slice(0, 100)
+      .map((r) => `<tr><td><code>${esc(r.query)}</code></td><td class="num">#${r.subjectPosition}</td></tr>`)
+      .join('');
+    html += '</tbody></table>';
+  }
+
+  $('out').innerHTML = html;
+}
+
+function run() {
+  $('err').textContent = '';
+  const rawText = $('raw').value.trim();
+  if (!rawText) {
+    $('out').innerHTML = '';
+    $('csv').disabled = true;
+    $('md').disabled = true;
+    return;
+  }
+  try {
+    const opts = currentFilterOpts();
+    const rawJson = JSON.parse(rawText);
+    const report = buildReport(extractPayloads(rawJson), {
+      ...opts,
+      subjectName: rawJson?.subject?.name,
+    });
+    let changes = null;
+    const prevText = $('prev').value.trim();
+    if (prevText) {
+      const prevJson = JSON.parse(prevText);
+      const prevReport = buildReport(extractPayloads(prevJson), {
+        ...opts,
+        subjectName: prevJson?.subject?.name ?? rawJson?.subject?.name,
+      });
+      changes = diffReports(prevReport, report);
+    }
+    lastReport = report;
+    lastChanges = changes;
+    render(report, changes);
+    $('csv').disabled = false;
+    $('md').disabled = false;
+  } catch (e) {
+    $('err').textContent = e.message;
+    $('csv').disabled = true;
+    $('md').disabled = true;
+  }
+}
+
+$('go').onclick = run;
+for (const id of ['maxRank', 'minRivals', 'asciiOnly', 'search']) {
+  $(id).addEventListener('input', () => {
+    if ($('raw').value.trim()) run();
+  });
+}
+
+$('ex').onclick = async () => {
+  $('raw').value = await (await fetch('examples/run.json')).text();
+  $('prev').value = await (await fetch('examples/previous-run.json')).text();
+  run();
+};
+
+$('csv').onclick = () => {
+  if (!lastReport) return;
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([toCsv(lastReport)], { type: 'text/csv' }));
+  a.download = 'aso-keyword-gap-audit.csv';
+  a.click();
+};
+
+$('md').onclick = async () => {
+  if (!lastReport) return;
+  await navigator.clipboard.writeText(toMarkdown(lastReport, lastChanges));
+  const btn = $('md');
+  const prev = btn.textContent;
+  btn.textContent = 'Copied!';
+  setTimeout(() => { btn.textContent = prev; }, 1400);
+};
+</script>
+</body>
+</html>

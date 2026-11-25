@@ -1,0 +1,49 @@
+{
+  "generatedAt": "2026-11-24T09:00:00.000Z",
+  "subject": {
+    "storeId": "0000000000",
+    "name": "Example Meal Prep"
+  },
+  "raws": [
+    {
+      "subjectStoreId": "0000000000",
+      "rivalStoreId": "0000000001",
+      "rivalName": "Rival Recipe Box",
+      "onlyRival": [
+        { "query": "meal planner", "rivalPosition": 3 },
+        { "query": "grocery list", "rivalPosition": 5 },
+        { "query": "weekly meal prep", "rivalPosition": 7 },
+        { "query": "pantry inventory", "rivalPosition": 14 },
+        { "query": "batch cooking", "rivalPosition": 38 }
+      ],
+      "onlySubject": [
+        { "query": "leftover recipe finder", "subjectPosition": 4 },
+        { "query": "fridge to meal", "subjectPosition": 9 }
+      ],
+      "shared": [
+        { "query": "recipe keeper", "subjectPosition": 8, "rivalPosition": 2 },
+        { "query": "dinner ideas", "subjectPosition": 11, "rivalPosition": 6 },
+        { "query": "cooking organizer", "subjectPosition": 5, "rivalPosition": 12 }
+      ]
+    },
+    {
+      "subjectStoreId": "0000000000",
+      "rivalStoreId": "0000000002",
+      "rivalName": "Rival Kitchen Note",
+      "onlyRival": [
+        { "query": "meal planner", "rivalPosition": 6 },
+        { "query": "grocery list", "rivalPosition": 9 },
+        { "query": "family cookbook", "rivalPosition": 4 },
+        { "query": "healthy dinner recipes", "rivalPosition": 18 }
+      ],
+      "onlySubject": [
+        { "query": "leftover recipe finder", "subjectPosition": 4 },
+        { "query": "fridge to meal", "subjectPosition": 9 }
+      ],
+      "shared": [
+        { "query": "recipe keeper", "subjectPosition": 8, "rivalPosition": 5 },
+        { "query": "macro meal prep", "subjectPosition": 7, "rivalPosition": 7 }
+      ]
+    }
+  ]
+}

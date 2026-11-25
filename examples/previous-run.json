@@ -1,0 +1,47 @@
+{
+  "generatedAt": "2026-11-17T09:00:00.000Z",
+  "subject": {
+    "storeId": "0000000000",
+    "name": "Example Meal Prep"
+  },
+  "raws": [
+    {
+      "subjectStoreId": "0000000000",
+      "rivalStoreId": "0000000001",
+      "rivalName": "Rival Recipe Box",
+      "onlyRival": [
+        { "query": "meal planner", "rivalPosition": 4 },
+        { "query": "grocery list", "rivalPosition": 6 },
+        { "query": "cooking organizer", "rivalPosition": 11 },
+        { "query": "pantry inventory", "rivalPosition": 16 }
+      ],
+      "onlySubject": [
+        { "query": "leftover recipe finder", "subjectPosition": 5 },
+        { "query": "fridge to meal", "subjectPosition": 10 },
+        { "query": "zero waste recipes", "subjectPosition": 15 }
+      ],
+      "shared": [
+        { "query": "recipe keeper", "subjectPosition": 14, "rivalPosition": 3 },
+        { "query": "dinner ideas", "subjectPosition": 9, "rivalPosition": 6 }
+      ]
+    },
+    {
+      "subjectStoreId": "0000000000",
+      "rivalStoreId": "0000000002",
+      "rivalName": "Rival Kitchen Note",
+      "onlyRival": [
+        { "query": "grocery list", "rivalPosition": 8 },
+        { "query": "family cookbook", "rivalPosition": 5 }
+      ],
+      "onlySubject": [
+        { "query": "leftover recipe finder", "subjectPosition": 5 },
+        { "query": "fridge to meal", "subjectPosition": 10 },
+        { "query": "zero waste recipes", "subjectPosition": 15 }
+      ],
+      "shared": [
+        { "query": "recipe keeper", "subjectPosition": 14, "rivalPosition": 6 },
+        { "query": "macro meal prep", "subjectPosition": 8, "rivalPosition": 7 }
+      ]
+    }
+  ]
+}

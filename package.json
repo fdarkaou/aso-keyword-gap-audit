@@ -1,0 +1,31 @@
+{
+  "name": "aso-keyword-gap-audit",
+  "version": "1.0.0",
+  "description": "Compare your iOS app's stored US App Store search footprint against one or more rivals with the PeekPanda keyword gap API: consensus gaps, striking-distance head-to-heads, weekly diff, CSV/Markdown and a browser page.",
+  "type": "module",
+  "bin": {
+    "aso-keyword-gap-audit": "cli.js"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "author": "Fekri Darkaoui",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fdarkaou/aso-keyword-gap-audit.git"
+  },
+  "homepage": "https://fdarkaou.github.io/aso-keyword-gap-audit/",
+  "keywords": [
+    "aso",
+    "app-store",
+    "ios",
+    "keyword-gap",
+    "competitor-research",
+    "mobile-marketing",
+    "peekpanda"
+  ]
+}
